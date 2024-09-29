@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { FaUserCircle, FaLock, FaEnvelope } from "react-icons/fa";
+ 
 function SignUp() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -14,11 +15,12 @@ function SignUp() {
         if (password !== confirmPassword) {
             setMessage("Password don't match")
         } 
-
         try {
             const response = await axios.post('http://localhost:5000/signup', { name, email, password });
             setMessage(response.data.message)
             if (response.status === 200) {
+                localStorage.setItem('token', response.data.token)
+                 console.log("Token stored in local storage:", response.data.token);
                 setName('');
                 setEmail('');
                 setPassword('');
@@ -32,34 +34,86 @@ function SignUp() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
+        <div className="min-h-screen bg-gradient-to-r from-blue-300 to-purple-600 flex flex-col justify-center items-center py-6">
             <div className="max-w-md w-full bg-white shadow-lg rounded-lg overflow-hidden">
                 
             <form onSubmit={handleSubmit} method="POST">
-                    <div className="bg-gradient-to-r from-cyan-400 to-sky-500 py-4 px-6">
-                        <h1 className="text-2xl font-semibold text-white">Sign Up</h1>
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 py-4 px-6 text-white">
+                        <h1 className="text-2xl text-center font-semibold text-white">Sign Up</h1>
                     </div>
                     <div className="py-8 px-6">
                         <div className="mb-6">
-                            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
-                            <input value={name} onChange={(e) => setName(e.target.value)} id="name" name="name" type="text" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Enter your full name" />
+                            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaUserCircle className="text-gray-400 mr-2" /> 
+                                <input
+                                    value={email}
+                                    onChange={(e) => setName(e.target.value)}
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your email address"
+                                    required
+                                />
+                            </div>
                         </div>
 
                         <div className="mb-6">
                             <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-                            <input value={email} onChange={(e) => setEmail(e.target.value)} id="email" name="email" type="text" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Enter your email address" />
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaEnvelope className="text-gray-400 mr-2" />
+                                <input
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your email address"
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div className="mb-6">
+                         <div className="mb-6">
                             <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                            <input value={password} onChange={(e) => setPassword(e.target.value)} id="password" name="password" type="password" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Enter your password" />
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaLock className="text-gray-400 mr-2" />
+                                <input
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your password"
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div className="mb-2">
-                            <label htmlFor="confirm-password" className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-                            <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} id="confirm-password" name="confirm-password" type="password" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Confirm your password" />
-                        </div> {message && <p className="text-red-500 mb-3">{message}</p>}
+                         <div className="mb-6">
+                            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaLock className="text-gray-400 mr-2" />
+                                <input
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    id="password"
+                                    name="Confirm Password"
+                                    type="password"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        {message && <p className="text-red-500 mb-3">{message}</p>}
                         <div className="flex justify-center">
-                            <button className="bg-cyan-500 w-1/2 text-white rounded-md px-4 py-2 hover:bg-cyan-600 focus:outline-none focus:ring focus:ring-cyan-400">
-                                Sign Up
+                            <button
+                                type="submit"
+                                className="bg-purple-600 w-1/2 text-white rounded-md px-4 py-2 hover:bg-purple-700 focus:outline-none focus:ring focus:ring-purple-400 transition duration-200"
+                            >
+                                Sign UP
                             </button>
                         </div>
                         <div className="flex justify-center mt-4">
@@ -74,11 +128,10 @@ function SignUp() {
                             </button>
                         </div>
                         <div className="mt-4 text-center">
-                            Already have an account? <Link to="/login" className="text-cyan-500 hover:underline">Sign In</Link>
+                            Already have an account? <Link to="/login" className="text-purple-600 hover:underline">Sign In</Link>
                         </div>
                     </div>
             </form>
-
                 </div>
         </div>
     );

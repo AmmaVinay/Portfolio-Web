@@ -1,49 +1,80 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaUserCircle, FaLock, FaEnvelope } from "react-icons/fa";
 
 function SignIn() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [message, setMessage] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    const handleSubmit = async (e) => {
-        e.preventDefault()
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/login', { email, password })
-            setMessage(response.data.message)
+            const response = await axios.post('http://localhost:5000/login', { email, password });
+            setMessage(response.data.message);
             if (response.status === 200) {
-                setEmail('')
-                setPassword('')
-                navigate('/')
+                localStorage.setItem('token', response.data.token);
+                setEmail('');
+                setPassword('');
+                navigate('/');
             }
         } catch (error) {
-            setMessage('An error occurred while logging the form*')
+            setMessage('Login failed. Please check your credentials and try again.');
+            console.error(error);
         }
     }
+
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
+        <div className="min-h-screen bg-gradient-to-r from-blue-300 to-purple-600 flex flex-col justify-center items-center py-6">
             <div className="max-w-md w-full bg-white shadow-lg rounded-lg overflow-hidden">
                 <form onSubmit={handleSubmit} method="POST">
-                    <div className="bg-gradient-to-r from-cyan-400 to-sky-500 py-4 px-6">
-                        <h1 className="text-2xl font-semibold text-white">Login</h1>
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 py-4 px-6 text-white">
+                        <h1 className="text-3xl font-bold text-center">Login</h1>
                     </div>
                     <div className="py-8 px-6">
                         <div className="mb-6">
                             <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-                            <input value={email} onChange={(e) => setEmail(e.target.value)} id="email" name="email" type="text" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Enter your email address" />
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaEnvelope className="text-gray-400 mr-2" />
+                                <input
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your email address"
+                                    required
+                                />
+                            </div>
                         </div>
                         <div className="mb-6">
                             <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                            <input value={password} onChange={(e) => setPassword(e.target.value)} id="password" name="password" type="password" className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" placeholder="Enter your password" />
+                            <div className="flex items-center border-b-2 border-gray-300 focus-within:border-purple-600">
+                                <FaLock className="text-gray-400 mr-2" />
+                                <input
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    className="peer placeholder-gray-400 placeholder-opacity-50 h-10 w-full text-gray-900 focus:outline-none"
+                                    placeholder="Enter your password"
+                                    required
+                                />
+                            </div>
                         </div>
-                        {message && <p className="mb-4 text-red-500">{message}</p>}
+                        {message && <p className="mb-4 text-red-500 text-center">{message}</p>}
                         <div className="mb-6 text-end">
-                            <Link to="/forgot-password" className="text-cyan-500 hover:underline">Forgot Password?</Link>
+                            <Link to="/forgot-password" className="text-purple-600 hover:underline">Forgot Password?</Link>
                         </div>
                         <div className="flex justify-center">
-                            <button className="bg-cyan-500 w-1/2 text-white rounded-md px-4 py-2 hover:bg-cyan-600 focus:outline-none focus:ring focus:ring-cyan-400">
+                            <button
+                                type="submit"
+                                className="bg-purple-600 w-1/2 text-white rounded-md px-4 py-2 hover:bg-purple-700 focus:outline-none focus:ring focus:ring-purple-400 transition duration-200"
+                            >
                                 Submit
                             </button>
                         </div>
@@ -59,7 +90,7 @@ function SignIn() {
                             </button>
                         </div>
                         <div className="mt-4 text-center">
-                            Don't have an account? <Link to="/signup" className="text-cyan-500 hover:underline">Sign Up</Link>
+                            Don't have an account? <Link to="/signup" className="text-purple-600 hover:underline">Sign Up</Link>
                         </div>
                     </div>
                 </form>
